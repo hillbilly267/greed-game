@@ -28,24 +28,47 @@ def setup_styles(button_font):
                     background="#2E2E2E", 
                     foreground="white")
 
-def show_main_menu(main, title_font, button_font, text_font):
+def show_main_menu(root, title_font, button_font, text_font):
     # Clear the window
-    for widget in main.winfo_children():
+    for widget in root.winfo_children():
         widget.destroy()
     
     # Create main frame
-    main_frame = ttk.Frame(main)
+    main_frame = ttk.Frame(root)
     main_frame.pack(expand=True, fill="both", padx=20, pady=20)
     
-   
+    # Title
+    title_label = tk.Label(main_frame, 
+                           text="GREED", 
+                           font=title_font, 
+                           bg="#2E2E2E", 
+                           fg="#4CAF50")
+    title_label.pack(pady=50)
+    
+    # Buttons frame
+    button_frame = ttk.Frame(main_frame)
+    button_frame.pack(pady=30)
+    
 
-def show_manual(main, title_font, text_font):
+    
+    # Manual button
+    manual_button = tk.Button(button_frame, 
+                              text="Manual", 
+                              font=button_font,
+                              bg="#2196F3", 
+                              fg="white",
+                              width=20, 
+                              height=2,
+                              command=lambda: show_manual(root, title_font, text_font))
+    manual_button.pack(pady=10)
+
+def show_manual(root, title_font, text_font):
     # Clear the window
-    for widget in main.winfo_children():
+    for widget in root.winfo_children():
         widget.destroy()
     
     # Create manual frame
-    manual_frame = ttk.Frame(main)
+    manual_frame = ttk.Frame(root)
     manual_frame.pack(expand=True, fill="both", padx=20, pady=20)
     
     # Title manual
@@ -80,7 +103,16 @@ def show_manual(main, title_font, text_font):
                             justify="left")
     manual_label.pack(pady=20)
     
-   
+    # Back button
+    back_button = tk.Button(manual_frame, 
+                            text="Back to Menu", 
+                            font=text_font,
+                            bg="#F44336", 
+                            fg="white",
+                            width=20, 
+                            height=2,
+                            command=lambda: show_main_menu(root, title_font, button_font, text_font))
+    back_button.pack(pady=20)
 
 
 if __name__ == "__main__":
