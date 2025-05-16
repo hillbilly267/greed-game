@@ -20,31 +20,40 @@ def show_menu():
     tk.Button(
         root, text="Spela", command=choose_players,
         bg="#393e46", fg="#ffd369",
-        activebackground="#00adb5", activeforeground="#222831",
-        font=("Arial", 16, "bold"), bd=0, relief="flat",
-        width=16, height=2, cursor="hand2", highlightthickness=0
+        font=("Arial", 16, "bold"),
+        width=16, height=2,
     ).pack(pady=15)
     tk.Button(
         root, text="Manual", command=show_manual,
         bg="#393e46", fg="#ffd369",
-        activebackground="#00adb5", activeforeground="#222831",
-        font=("Arial", 16, "bold"), bd=0, relief="flat",
-        width=16, height=2, cursor="hand2", highlightthickness=0
+        font=("Arial", 16, "bold"),
+        width=16, height=2,
     ).pack(pady=5)
 
 # Manual
 def show_manual():
     clear()
-    tk.Label(root, text="Manual", font=("Arial", 18)).pack(pady=10)
-    tk.Label(root, text="Först till 50 poäng.\nKasta tärningen eller spara poängen.\nSlår du 1 förlorar du rundans poäng och turen går vidare.").pack(pady=10)
-    tk.Button(root, text="Tillbaka", command=show_menu).pack(pady=10)
+    tk.Label(root, text="Manual",bg="#393e46", fg="#ffd369",font=("Arial", 18, "bold")).pack(pady=10)
+    tk.Label(root, text="Först till 50 poäng.\nKasta tärningen eller spara poängen.\nSlår du 1 förlorar du rundans poäng och turen går vidare.",bg="#393e46", fg="#ffd369",font=("Arial", 10, "bold")).pack(pady=10)
+    tk.Button(root, text="Tillbaka", bg="#393e46", fg="#ffd369",font=("Arial", 18, "bold"), command=show_menu).pack(pady=10)
 
 # Välj antal spelare
 def choose_players():
     clear()
-    tk.Label(root, text="Välj antal spelare", font=("Arial", 16)).pack(pady=10)
+    root.config(bg="#222831")
+    tk.Label(root, text="Välj antal spelare", font=("Arial", 16, "bold"), bg="#222831", fg="#ffd369").pack(pady=20)
     for i in range(2, 7):
-        tk.Button(root, text=f"{i} spelare", command=lambda n=i: start_game(n)).pack(pady=5)
+        tk.Button(
+            root, text=f"{i} spelare", command=lambda n=i: start_game(n),
+            bg="#393e46", fg="#ffd369",
+            font=("Arial", 14, "bold"),
+            width=16, height=1,).pack(pady=7)
+    tk.Button(
+        root, text="Tillbaka", command=show_menu,
+        bg="#393e46", fg="#ffd369",
+        font=("Arial", 12, "bold"),
+        width=12, height=1,
+    ).pack(pady=15)
 
 # Starta spelet
 def start_game(n):
@@ -61,30 +70,39 @@ def show_game_ui():
     global score_labels, turn_label, dice_label, round_label, feedback_label, roll_btn, hold_btn
 
     score_labels = []
+    frame1 = tk.Frame(root, bg="#393e46")
+    frame2 = tk.Frame(root, bg="#393e46")
+    frame1.pack(pady=5)
+    frame2.pack(pady=5)
     for i in range(players):
-        lbl = tk.Label(root, text=f"Spelare {i+1}: 0")
-        lbl.pack()
+        lbl = tk.Label(
+            frame1 if i < 2 else frame2,
+            text=f"Spelare {i+1}: 0",
+            bg="#393e46", fg="#ffd369",
+            font=("Arial", 14, "bold")
+        )
+        lbl.pack(side="left", padx=10)
         score_labels.append(lbl)
 
-    turn_label = tk.Label(root, text=f"Tur: Spelare {current+1}", font=("Arial", 14, "bold"))
+    turn_label = tk.Label(root, text=f"Tur: Spelare {current+1}", bg="#393e46", fg="#ffd369",font=("Arial", 18, "bold"))
     turn_label.pack(pady=10)
 
-    dice_label = tk.Label(root, text="Tärning: -", font=("Arial", 20))
+    dice_label = tk.Label(root, text="Tärning: -",bg="#393e46", fg="#ffd369",font=("Arial", 20, "bold"))
     dice_label.pack()
 
-    round_label = tk.Label(root, text="Runda: 0")
+    round_label = tk.Label(root, text="Pool: 0",bg="#393e46", fg="#ffd369",font=("Arial", 10, "bold"))
     round_label.pack(pady=5)
 
-    feedback_label = tk.Label(root, text="")
+    feedback_label = tk.Label(root, text="", bg="#393e46", fg="#ffd369",font=("Arial", 10, "bold"))
     feedback_label.pack(pady=5)
 
-    roll_btn = tk.Button(root, text="Kasta", command=roll_dice)
+    roll_btn = tk.Button(root, text="Kasta", bg="#393e46", fg="#ffd369",font=("Arial", 12, "bold"), command=roll_dice)
     roll_btn.pack(pady=5)
 
-    hold_btn = tk.Button(root, text="Spara", command=hold_points)
+    hold_btn = tk.Button(root, text="Spara", bg="#393e46", fg="#ffd369",font=("Arial", 12, "bold"), command=hold_points)
     hold_btn.pack(pady=5)
 
-    tk.Button(root, text="Meny", command=show_menu).pack(pady=10)
+    tk.Button(root, text="Meny", bg="#393e46", fg="#ffd369",font=("Arial", 10, "bold"), command=show_menu).pack(pady=10)
 
 # Kasta tärningen
 def roll_dice():
