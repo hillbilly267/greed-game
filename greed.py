@@ -7,33 +7,33 @@ scores = []
 current = 0
 round_points = 0
 
-# S: Töm fönstret
+# S: Töm fönstret. använder sig av winfo_childer i root för see alla widgets och sedan använder destroy för att ta bort föregående widgets
 def clear():
     for widget in root.winfo_children():
         widget.destroy()
 
-# D: Meny
+# D: Meny. skapar menyn av spelet men spelnamnets rubrik med två knappar "spela och manual" med ledande command till dess funktion
 def show_menu():
     clear()
     tk.Label(root, text="Tärningsspel", font=("Arial", 20)).pack(pady=20)
     tk.Button(root, text="Spela", command=choose_players).pack(pady=10)
     tk.Button(root, text="Manual", command=show_manual).pack(pady=10)
 
-# D: Manual
+# D: Manual. använder sig av clear för att sedan lägga till tre nya. Manual/hur man spelar, spel titel och en tillbaka knapp
 def show_manual():
     clear()
     tk.Label(root, text="Manual", font=("Arial", 18)).pack(pady=10)
     tk.Label(root, text="Först till 50 poäng.\nKasta tärningen eller spara poängen.\nSlår du 1 förlorar du rundans poäng och turen går vidare.").pack(pady=10)
     tk.Button(root, text="Tillbaka", command=show_menu).pack(pady=10)
 
-# S/D: Välj antal spelare
+# S/D: Välj antal spelare. skapar en ny widget med knappar för att välja antal spelare
 def choose_players():
     clear()
     tk.Label(root, text="Välj antal spelare", font=("Arial", 16)).pack(pady=10)
     for i in range(2, 7):
         tk.Button(root, text=f"{i} spelare", command=lambda n=i: start_game(n)).pack(pady=5)
 
-# S: Starta spelet
+# S: Starta spelet.  initierar ett spel med n spelare, sätter poäng, nuvarande spelare och rundpoäng till noll.
 def start_game(n):
     global players, scores, current, round_points
     players = n
