@@ -1,39 +1,52 @@
 import tkinter as tk
 import random
 
-# S: Globala variabler
+# Globala variabler
 players = 0
 scores = []
 current = 0
 round_points = 0
 
-# S: Töm fönstret
+# Töm fönstret
 def clear():
     for widget in root.winfo_children():
         widget.destroy()
 
-# D: Meny
+# Meny
 def show_menu():
     clear()
-    tk.Label(root, text="Tärningsspel", font=("Arial", 20)).pack(pady=20)
-    tk.Button(root, text="Spela", command=choose_players, font=("Arial", 14), height=2, width=15).pack(pady=10)
-    tk.Button(root, text="Manual", command=show_manual, font=("Arial", 14), height=2, width=15).pack(pady=10)
+    root.config(bg="#222831")  # Mörk bakgrund
+    tk.Label(root, text="Tärningsspel", font=("Arial", 22, "bold"), bg="#222831", fg="#ffd369").pack(pady=30)
+    tk.Button(
+        root, text="Spela", command=choose_players,
+        bg="#393e46", fg="#ffd369",
+        activebackground="#00adb5", activeforeground="#222831",
+        font=("Arial", 16, "bold"), bd=0, relief="flat",
+        width=16, height=2, cursor="hand2", highlightthickness=0
+    ).pack(pady=15)
+    tk.Button(
+        root, text="Manual", command=show_manual,
+        bg="#393e46", fg="#ffd369",
+        activebackground="#00adb5", activeforeground="#222831",
+        font=("Arial", 16, "bold"), bd=0, relief="flat",
+        width=16, height=2, cursor="hand2", highlightthickness=0
+    ).pack(pady=5)
 
-# D: Manual
+# Manual
 def show_manual():
     clear()
     tk.Label(root, text="Manual", font=("Arial", 18)).pack(pady=10)
     tk.Label(root, text="Först till 50 poäng.\nKasta tärningen eller spara poängen.\nSlår du 1 förlorar du rundans poäng och turen går vidare.").pack(pady=10)
     tk.Button(root, text="Tillbaka", command=show_menu).pack(pady=10)
 
-# S/D: Välj antal spelare
+# Välj antal spelare
 def choose_players():
     clear()
     tk.Label(root, text="Välj antal spelare", font=("Arial", 16)).pack(pady=10)
     for i in range(2, 7):
-        tk.Button(root, text=f"{i} spelare", command=lambda n=i: start_game(n), font=("Arial"), height=2, width=8).pack(pady=5)
+        tk.Button(root, text=f"{i} spelare", command=lambda n=i: start_game(n)).pack(pady=5)
 
-# S: Starta spelet
+# Starta spelet
 def start_game(n):
     global players, scores, current, round_points
     players = n
@@ -42,7 +55,7 @@ def start_game(n):
     round_points = 0
     show_game_ui()
 
-# S: Skapa spelets UI
+# Skapa spelets UI
 def show_game_ui():
     clear()
     global score_labels, turn_label, dice_label, round_label, feedback_label, roll_btn, hold_btn
@@ -73,7 +86,7 @@ def show_game_ui():
 
     tk.Button(root, text="Meny", command=show_menu).pack(pady=10)
 
-# S: Kasta tärningen
+# Kasta tärningen
 def roll_dice():
     global round_points
     value = random.randint(1, 6)
@@ -88,7 +101,7 @@ def roll_dice():
         round_points += value
         round_label.config(text=f"Runda: {round_points}")
 
-# S: Spara poängen
+# Spara poängen
 def hold_points():
     global scores, round_points
     scores[current] += round_points
@@ -102,7 +115,7 @@ def hold_points():
     disable_buttons()
     root.after(1000, switch_turn)
 
-# S: Byt spelare
+# Byt spelare
 def switch_turn():
     global current, round_points
     current = (current + 1) % players
@@ -113,22 +126,22 @@ def switch_turn():
     feedback_label.config(text="")
     enable_buttons()
 
-# S: Uppdatera poängvisning
+# Uppdatera poängvisning
 def update_scores():
     for i in range(players):
         score_labels[i].config(text=f"Spelare {i+1}: {scores[i]}")
 
-# S: Inaktivera knappar
+# Inaktivera knappar
 def disable_buttons():
     roll_btn.config(state="disabled")
     hold_btn.config(state="disabled")
 
-# S: Aktivera knappar
+# Aktivera knappar
 def enable_buttons():
     roll_btn.config(state="normal")
     hold_btn.config(state="normal")
 
-# S: Starta spelet
+# Starta spelet
 root = tk.Tk()
 root.title("Tärningsspel")
 root.geometry("400x400")
