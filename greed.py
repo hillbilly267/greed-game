@@ -1,39 +1,39 @@
 import tkinter as tk
 import random
 
-# Globala variabler
+# S: Globala variabler
 players = 0
 scores = []
 current = 0
 round_points = 0
 
-# Töm fönstret
+# S: Töm fönstret
 def clear():
     for widget in root.winfo_children():
         widget.destroy()
 
-# Meny
+# D: Meny
 def show_menu():
     clear()
     tk.Label(root, text="Tärningsspel", font=("Arial", 20)).pack(pady=20)
     tk.Button(root, text="Spela", command=choose_players).pack(pady=10)
     tk.Button(root, text="Manual", command=show_manual).pack(pady=10)
 
-# Manual
+# D: Manual
 def show_manual():
     clear()
     tk.Label(root, text="Manual", font=("Arial", 18)).pack(pady=10)
     tk.Label(root, text="Först till 50 poäng.\nKasta tärningen eller spara poängen.\nSlår du 1 förlorar du rundans poäng och turen går vidare.").pack(pady=10)
     tk.Button(root, text="Tillbaka", command=show_menu).pack(pady=10)
 
-# Välj antal spelare
+# S/D: Välj antal spelare
 def choose_players():
     clear()
     tk.Label(root, text="Välj antal spelare", font=("Arial", 16)).pack(pady=10)
     for i in range(2, 7):
         tk.Button(root, text=f"{i} spelare", command=lambda n=i: start_game(n)).pack(pady=5)
 
-# Starta spelet
+# S: Starta spelet
 def start_game(n):
     global players, scores, current, round_points
     players = n
@@ -42,7 +42,7 @@ def start_game(n):
     round_points = 0
     show_game_ui()
 
-# Skapa spelets UI
+# S: Skapa spelets UI
 def show_game_ui():
     clear()
     global score_labels, turn_label, dice_label, round_label, feedback_label, roll_btn, hold_btn
@@ -73,7 +73,7 @@ def show_game_ui():
 
     tk.Button(root, text="Meny", command=show_menu).pack(pady=10)
 
-# Kasta tärningen
+# S: Kasta tärningen
 def roll_dice():
     global round_points
     value = random.randint(1, 6)
@@ -88,7 +88,7 @@ def roll_dice():
         round_points += value
         round_label.config(text=f"Runda: {round_points}")
 
-# Spara poängen
+# S: Spara poängen
 def hold_points():
     global scores, round_points
     scores[current] += round_points
@@ -102,7 +102,7 @@ def hold_points():
     disable_buttons()
     root.after(1000, switch_turn)
 
-# Byt spelare
+# S: Byt spelare
 def switch_turn():
     global current, round_points
     current = (current + 1) % players
@@ -113,22 +113,22 @@ def switch_turn():
     feedback_label.config(text="")
     enable_buttons()
 
-# Uppdatera poängvisning
+# S: Uppdatera poängvisning
 def update_scores():
     for i in range(players):
         score_labels[i].config(text=f"Spelare {i+1}: {scores[i]}")
 
-# Inaktivera knappar
+# S: Inaktivera knappar
 def disable_buttons():
     roll_btn.config(state="disabled")
     hold_btn.config(state="disabled")
 
-# Aktivera knappar
+# S: Aktivera knappar
 def enable_buttons():
     roll_btn.config(state="normal")
     hold_btn.config(state="normal")
 
-# Starta spelet
+# S: Starta spelet
 root = tk.Tk()
 root.title("Tärningsspel")
 root.geometry("400x400")
