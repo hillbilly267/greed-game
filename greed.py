@@ -5,7 +5,7 @@ import random
 players = 0
 scores = []
 current = 0
-round_points = 0
+pool_points = 0
 
 # Töm fönstret
 def clear():
@@ -57,77 +57,135 @@ def choose_players():
 
 # Starta spelet
 def start_game(n):
-    global players, scores, current, round_points
+    global players, scores, current, pool_points
     players = n
     scores = [0]*n
     current = 0
-    round_points = 0
+    pool_points = 0
     show_game_ui()
 
 # Skapa spelets UI
 def show_game_ui():
     clear()
-    global score_labels, turn_label, dice_label, round_label, feedback_label, roll_btn, hold_btn
+    global score_labels, turn_label, dice_label, pool_label, feedback_label, roll_btn, hold_btn
+    root.config(bg="#222831")
 
+    # Huvudkontainer
+    main_frame = tk.Frame(root, bg="#222831")
+    main_frame.pack(expand=True, fill='both')
+
+    # Poängram högst upp
+    score_frame = tk.Frame(main_frame, bg="#222831")
+    score_frame.pack(fill='x', pady=20)
+    
     score_labels = []
-    frame1 = tk.Frame(root, bg="#393e46")
-    frame2 = tk.Frame(root, bg="#393e46")
-    frame1.pack(pady=5)
-    frame2.pack(pady=5)
+    players_per_row = min(3, players)
     for i in range(players):
+        col = i % players_per_row
+        row = i // players_per_row
         lbl = tk.Label(
-            frame1 if i < 2 else frame2,
+            score_frame,
             text=f"Spelare {i+1}: 0",
-            bg="#393e46", fg="#ffd369",
-            font=("Arial", 14, "bold")
+            bg="#222831", fg="#ffd369",
+            font=("Arial", 16, "bold")
         )
-        lbl.pack(side="left", padx=10)
+        lbl.grid(row=row, column=col, padx=20, pady=10)
         score_labels.append(lbl)
 
-    turn_label = tk.Label(root, text=f"Tur: Spelare {current+1}", bg="#393e46", fg="#ffd369",font=("Arial", 18, "bold"))
-    turn_label.pack(pady=10)
+    # Spelinfo i mitten
+    game_frame = tk.Frame(main_frame, bg="#222831")
+    game_frame.pack(expand=True, fill='both', pady=20)
 
-    dice_label = tk.Label(root, text="Tärning: -",bg="#393e46", fg="#ffd369",font=("Arial", 20, "bold"))
-    dice_label.pack()
+    turn_label = tk.Label(
+        game_frame,
+        text=f"Tur: Spelare {current+1}",
+        bg="#222831", fg="#ffd369",
+        font=("Arial", 24, "bold")
+    )
+    turn_label.pack(pady=20)
 
-    round_label = tk.Label(root, text="Pool: 0",bg="#393e46", fg="#ffd369",font=("Arial", 10, "bold"))
-    round_label.pack(pady=5)
+    dice_label = tk.Label(
+        game_frame,
+        text="Tärning: -",
+        bg="#222831", fg="#ffd369",
+        font=("Arial", 48, "bold")  # Mycket större tärningstext
+    )
+    dice_label.pack(pady=20)
 
-    feedback_label = tk.Label(root, text="", bg="#393e46", fg="#ffd369",font=("Arial", 10, "bold"))
-    feedback_label.pack(pady=5)
+    pool_label = tk.Label(
+        game_frame,
+        text="Pool: 0",
+        bg="#222831", fg="#ffd369",
+        font=("Arial", 32, "bold")  # Större pooltext
+    )
+    pool_label.pack(pady=20)
 
-    roll_btn = tk.Button(root, text="Kasta", bg="#393e46", fg="#ffd369",font=("Arial", 12, "bold"), command=roll_dice)
-    roll_btn.pack(pady=5)
+    feedback_label = tk.Label(
+        game_frame,
+        text="",
+        bg="#222831", fg="#ffd369",
+        font=("Arial", 18, "bold")
+    )
+    feedback_label.pack(pady=20)
 
-    hold_btn = tk.Button(root, text="Spara", bg="#393e46", fg="#ffd369",font=("Arial", 12, "bold"), command=hold_points)
-    hold_btn.pack(pady=5)
+    # Knappar längst ner
+    button_frame = tk.Frame(main_frame, bg="#222831")
+    button_frame.pack(fill='x', pady=30)
 
-    tk.Button(root, text="Meny", bg="#393e46", fg="#ffd369",font=("Arial", 10, "bold"), command=show_menu).pack(pady=10)
+    roll_btn = tk.Button(
+        button_frame,
+        text="KASTA",
+        bg="#393e46", fg="#ffd369",
+        font=("Arial", 24, "bold"),  # Större knapptext
+        width=10, height=2,
+        command=roll_dice
+    )
+    roll_btn.pack(side='left', expand=True, padx=20)
+
+    hold_btn = tk.Button(
+        button_frame,
+        text="SPARA",
+        bg="#393e46", fg="#ffd369",
+        font=("Arial", 24, "bold"),  # Större knapptext
+        width=10, height=2,
+        command=hold_points
+    )
+    hold_btn.pack(side='right', expand=True, padx=20)
+
+    menu_btn = tk.Button(
+        main_frame,
+        text="MENY",
+        bg="#393e46", fg="#ffd369",
+        font=("Arial", 16, "bold"),  # Större menyknapp
+        width=8, height=1,
+        command=show_menu
+    )
+    menu_btn.pack(side='bottom', pady=20)
 
 # Kasta tärningen
 def roll_dice():
-    global round_points
+    global pool_points
     value = random.randint(1, 6)
     dice_label.config(text=f"Tärning: {value}")
     if value == 1:
-        round_points = 0
-        round_label.config(text="Runda: 0")
+        pool_points = 0
+        pool_label.config(text="Pool: 0")
         feedback_label.config(text=f"Spelare {current+1} slog 1!")
         disable_buttons()
         root.after(1000, switch_turn)
     else:
-        round_points += value
-        round_label.config(text=f"Runda: {round_points}")
+        pool_points += value
+        pool_label.config(text=f"Pool: {pool_points}")
 
 # Spara poängen
 def hold_points():
-    global scores, round_points
-    scores[current] += round_points
+    global scores, pool_points
+    scores[current] += pool_points
     if scores[current] >= 50:
         feedback_label.config(text=f"Spelare {current+1} vinner!")
         disable_buttons()
         return
-    round_points = 0
+    pool_points = 0
     update_scores()
     feedback_label.config(text=f"Spelare {current+1} sparade sina poäng.")
     disable_buttons()
@@ -135,12 +193,12 @@ def hold_points():
 
 # Byt spelare
 def switch_turn():
-    global current, round_points
+    global current, pool_points
     current = (current + 1) % players
-    round_points = 0
+    pool_points = 0
     update_scores()
     turn_label.config(text=f"Tur: Spelare {current+1}")
-    round_label.config(text="Runda: 0")
+    pool_label.config(text="Pool: 0")
     feedback_label.config(text="")
     enable_buttons()
 
@@ -162,6 +220,6 @@ def enable_buttons():
 # Starta spelet
 root = tk.Tk()
 root.title("Tärningsspel")
-root.geometry("400x400")
+root.geometry("500x800")
 show_menu()
 root.mainloop()
